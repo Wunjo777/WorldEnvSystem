@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 93fd598e8101cf5459cfaab13ae3a094
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - computeShader: {fileID: 7200000, guid: 18ecd569400d0ba46b0a533d102ba674, type: 3}
+  - material: {fileID: 2100000, guid: 7696eee3d5d51e247bd55e11bbc14ead, type: 2}
+  - theSkyBox: {fileID: 2100000, guid: 14659b2ccdad9264699c55047fec7955, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
