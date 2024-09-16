@@ -46,7 +46,7 @@ The creation of volumetric clouds is based on screen-space post-processing effec
 
 Note that the ray marching calculations for the volumetric clouds are performed in real-time and I have not yet implemented any optimizations, which may impact performance.
 ###### References
-- [The main tutorial I followed](https://zhuanlan.zhihu.com/p/248406797)
+- [The Main Tutorial I Followed](https://zhuanlan.zhihu.com/p/248406797)
 - [A Ray-Box Intersection Algorithm](https://jcgt.org/published/0007/03/04/)
 - [Fractal Brownian Motion](https://thebookofshaders.com/13/)
 - [Guerrilla's Cloud System Nubis in Horizon:Zero Dawn](https://www.guerrilla-games.com/read/nubis-realtime-volumetric-cloudscapes-in-a-nutshell)
@@ -54,4 +54,17 @@ Note that the ray marching calculations for the volumetric clouds are performed 
 - [Some Optimization Techniques](https://zhuanlan.zhihu.com/p/622654876)
 
 #### Atmospheric Scattering
+###### Overall Approach
+I implemented atmospheric scattering by writing a shader for the skybox (although it can also be achieved through screen-space post-processing effects, using the skybox makes it much easier to obtain lighting effects). Atmospheric scattering is also based on the ray marching method, where rays are cast from the camera, and the remaining energy of sunlight reaching the camera after scattering through the atmosphere is calculated using various physical formulas of scattering. Since the color variation of the sky is mainly related to light scattering (Rayleigh scattering and Mie scattering), I omitted the impact of absorption.
 
+Atmospheric scattering ranges from simple to complex, starting with single scattering and progressing to multiple scattering. Single scattering is a simplified model and consists of three parts: transmittance, scattering, and transmittance again. Multiple scattering, on the other hand, is an integral of recursive forms based on single scattering and requires significantly more computation. In my project, I used research results from a paper published in 2020 to optimize the computation of multiple scattering. Additionally, I used a compute shader to precompute certain values for both single and multiple scattering, storing the results in lookup table (LUT) textures. This way, during real-time rendering, I can simply sample the textures to obtain the corresponding results, thereby improving performance.
+###### References
+- [The main tutorial I followed](https://zhuanlan.zhihu.com/p/595576594)
+- [Some Theoretical Knowledge](https://zhuanlan.zhihu.com/p/36498679)
+- [Some Theories And Mathematics](https://www.alanzucconi.com/2017/10/10/atmospheric-scattering-3/)
+- [Another Tutorial](https://zhuanlan.zhihu.com/p/632134425)
+- [Another More Detailed Tutorial](https://zhuanlan.zhihu.com/p/237502022)
+- [An Astoundingly Long Tutorial(a bit too long...)](https://zhuanlan.zhihu.com/p/548799663)
+- [The Classic Paper of Precomputed Atmospheric Scattering(2008)](https://inria.hal.science/inria-00288758/file/article.pdf)
+- [A New Implementation of Precomputed Atmospheric Scattering(2017)(with online demo)](https://ebruneton.github.io/precomputed_atmospheric_scattering/)
+- [The Paper I Mentioned in Overall Approach(2020)(a fabulous new implementation)](https://sebh.github.io/publications/egsr2020.pdf)
