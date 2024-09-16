@@ -15,7 +15,7 @@ This is a personal project of mine aimed at implementing various natural environ
 
 ### Introduction
 
-Up to now, I have implemented volumetric clouds effects and atmospheric multiple scattering. The overall approach and the reference materials I used are listed below. Suggestions and corrections are always welcome.
+Up to now, I have implemented volumetric clouds and atmospheric multiple scattering. The overall approach and the reference materials I used are listed below. Suggestions and corrections are always welcome. If you have any questions, feel free to contact me at *1299003724@qq.com*.
 
 This project is still ongoing and being updated......
 
