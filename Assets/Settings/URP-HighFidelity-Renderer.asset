@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9265dff86a7e22e4baf03ad4ce8b2efd, type: 3}
-  m_Name: AtmospherePass
+  m_Name: VolumetricLightPass
   m_EditorClassIdentifier: 
   m_Active: 0
   settings:
     renderPassEvent: 550
-    shader: {fileID: 0}
+    shader: {fileID: 4800000, guid: ad1b49db19527e245837e7a1ad5143c2, type: 3}
 --- !u!114 &-1878332245247344467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8b51e08aad401d43ab5ef7ea55b4c03, type: 3}
   m_Name: CloudsPass
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 550
     shader: {fileID: 4800000, guid: 7b0e96d66a94a5341819e13d09a3e135, type: 3}

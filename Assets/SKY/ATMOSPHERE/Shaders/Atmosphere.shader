@@ -14,7 +14,7 @@ Shader "Shaders/Atmosphere"
 #pragma vertex vert
 #pragma fragment frag
 
-#define MAX_MARCH_STEP 64
+#define MAX_MARCH_STEP 32
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
