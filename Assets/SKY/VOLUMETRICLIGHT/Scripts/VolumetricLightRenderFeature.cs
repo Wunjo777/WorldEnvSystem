@@ -104,9 +104,12 @@ public class VolumetricLightPass : ScriptableRenderPass
         //下方进行一些计算或给shader传递参数：
         // volumetricLightMaterial.SetColor("_TestTint", volumetricLight.testTint.value);
 
+        volumetricLightMaterial.SetTexture(FinalTexId, source);
+
+        volumetricLightMaterial.SetFloat("LightIntensity", volumetricLight.LightIntensity.value);
 
         /**********************************************************************************************************/
-        volumetricLightMaterial.SetTexture(FinalTexId, source);
+
 
         cmd.GetTemporaryRT(LightId, cameraData.camera.scaledPixelWidth, cameraData.camera.scaledPixelHeight, 0, FilterMode.Trilinear, RenderTextureFormat.Default);
         cmd.GetTemporaryRT(BlurId, cameraData.camera.scaledPixelWidth, cameraData.camera.scaledPixelHeight, 0, FilterMode.Trilinear, RenderTextureFormat.Default);

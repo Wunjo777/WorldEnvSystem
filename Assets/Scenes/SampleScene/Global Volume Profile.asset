@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   skipIterations:
     m_OverrideState: 0
     m_Value: 1
@@ -85,7 +85,7 @@ MonoBehaviour:
     m_Value: 0.1
   DetailTune:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 0.2
   ShapeSpeed:
     m_OverrideState: 1
     m_Value: 0.05
@@ -124,13 +124,16 @@ MonoBehaviour:
     m_Value: 1
   MaskNoiseUvScale:
     m_OverrideState: 1
-    m_Value: 2.6
+    m_Value: 2
   ShapeNoiseUvScale:
     m_OverrideState: 1
     m_Value: 0.5
   DetailNoiseUvScale:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 2
+  CloudAbsorbTune:
+    m_OverrideState: 1
+    m_Value: 5
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,3 +204,6 @@ MonoBehaviour:
   m_Name: Atmosphere
   m_EditorClassIdentifier: 
   active: 1
+  LightIntensity:
+    m_OverrideState: 1
+    m_Value: 0

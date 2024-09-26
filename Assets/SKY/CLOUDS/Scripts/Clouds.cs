@@ -34,4 +34,5 @@ public class Clouds : VolumeComponent
     public FloatParameter MaskNoiseUvScale = new FloatParameter(2.6f);
     public FloatParameter ShapeNoiseUvScale = new FloatParameter(0.5f);
     public FloatParameter DetailNoiseUvScale = new FloatParameter(3f);
+    public FloatParameter CloudAbsorbTune = new FloatParameter(4f);
 }

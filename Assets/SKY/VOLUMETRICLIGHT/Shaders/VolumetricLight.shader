@@ -11,7 +11,7 @@ Shader "Shaders/VolumetricLight"
         Tags{"RenderPipeline" = "UniversalPipeline"} Cull Off Zwrite Off ZTest Always
             HLSLINCLUDE
 
-#define MAX_MARCH_STEP 8
+#define MAX_MARCH_STEP 16
 
 #define MAIN_LIGHT_CALCULATE_SHADOWS // 定义阴影采样
 #define _MAIN_LIGHT_SHADOWS_CASCADE  // 启用级联阴影
@@ -45,6 +45,8 @@ Shader "Shaders/VolumetricLight"
 
         Texture2D _FinalTex;
         SamplerState sampler_FinalTex;
+
+        float LightIntensity;
         CBUFFER_END
 
         Varings vert(ATtributes IN)
@@ -53,6 +55,11 @@ Shader "Shaders/VolumetricLight"
             OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
             OUT.uv = IN.texcoord;
             return OUT;
+        }
+
+        float Remap(float value, float inputMin, float inputMax, float outputMin, float outputMax)
+        {
+            return lerp(outputMin, outputMax, (value - inputMin) / (inputMax - inputMin));
         }
 
         float GetLightAttenuation(float3 position)
@@ -89,7 +96,7 @@ Shader "Shaders/VolumetricLight"
 
         float rayLength = length(worldPos.xyz - _WorldSpaceCameraPos.xyz);
         float step = rayLength / MAX_MARCH_STEP;
-        float3 p = _WorldSpaceCameraPos.xyz + jitter;
+        float3 p = _WorldSpaceCameraPos.xyz + Remap(jitter, 0, 0.5, -0.15, 0.15);
         float intensity = 0;
         for (int i = 0; i < MAX_MARCH_STEP; i++)
         {
@@ -97,9 +104,9 @@ Shader "Shaders/VolumetricLight"
             intensity += light;
             p += worldViewDir * step;
         }
-        intensity /= MAX_MARCH_STEP * 6;
+        intensity /= MAX_MARCH_STEP;
 
-        return float4(intensity.rrr * _MainLightColor.rgb, 1);
+        return float4(intensity.rrr * LightIntensity * _MainLightColor.rgb, 1);
     }
     ENDHLSL
 }

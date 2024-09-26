@@ -40,8 +40,10 @@ public class CloudsRenderFeature : ScriptableRendererFeature
 public class CloudsPass : ScriptableRenderPass
 {
     static readonly string k_RenderTag = "Clouds Effects";          // 设置渲染 Tags
-    static readonly int MainTexId = Shader.PropertyToID("_MainTex");   // 设置主贴图
-    static readonly int TempTargetId = Shader.PropertyToID("_TempTargetClouds");    // 设置储存图像信息
+    static readonly int FinalTexId = Shader.PropertyToID("_FinalTex");   // 设置主贴图
+    static readonly int CloudId = Shader.PropertyToID("_CloudTex");
+    static readonly int BlurId = Shader.PropertyToID("_BlurTex");
+    static readonly int blurLoop = 4;
     /********************************************************************************************/
     Clouds clouds;           // 传递到volume
     Material cloudsMaterial;     // 后处理使用材质
@@ -101,8 +103,8 @@ public class CloudsPass : ScriptableRenderPass
         ref var cameraData = ref renderingData.cameraData;      // 获取摄像机属性
         var camera = cameraData.camera;                         // 传入摄像机
         var source = renderingData.cameraData.renderer.cameraColorTargetHandle;                             // 获取渲染图片
-        int destination = TempTargetId;                         // 渲染结果图片
-
+                                                                                                            // int destination = TempTargetId;                         // 渲染结果图片
+        cloudsMaterial.SetTexture(FinalTexId, source);
         /******************************************************************************************************************/
         findCloudBox = GameObject.Find("CloudBox");
         Debug.Assert(findCloudBox != null, "无法找到CloudBox！");
@@ -118,99 +120,81 @@ public class CloudsPass : ScriptableRenderPass
             cloudsMaterial.SetVector("_boundsMin", boundsMin);
             cloudsMaterial.SetVector("_boundsMax", boundsMax);
         }
-        if (clouds.Basic3DTex != null)
-        {
-            cloudsMaterial.SetTexture("_Basic3DTex", clouds.Basic3DTex.value);
-        }
-        if (clouds.WeatherTexture != null)
-        {
-            cloudsMaterial.SetTexture("_WeatherMap", clouds.WeatherTexture.value);
-        }
-        if (clouds.Detail3DTex != null)
-        {
-            cloudsMaterial.SetTexture("_Detail3DTex", clouds.Detail3DTex.value);
-        }
-        if (clouds.MaskNoise != null)
-        {
-            cloudsMaterial.SetTexture("_maskNoise", clouds.MaskNoise.value);
-        }
-        if (clouds.BlueNoise != null)
-        {
-            cloudsMaterial.SetTexture("_BlueNoise", clouds.BlueNoise.value);
-        }
-        if (clouds.ShapeTune != null)
-        {
-            cloudsMaterial.SetFloat("_shapeTune", clouds.ShapeTune.value);
-        }
-        if (clouds.DetailTune != null)
-        {
-            cloudsMaterial.SetFloat("_detailTune", clouds.DetailTune.value);
-        }
-        if (clouds.ShapeSpeed != null)
-        {
-            cloudsMaterial.SetFloat("_shapeSpeed", clouds.ShapeSpeed.value);
-        }
-        if (clouds.DetailSpeed != null)
-        {
-            cloudsMaterial.SetFloat("_setailSpeed", clouds.DetailSpeed.value);
-        }
-        if (clouds.WeatherMapSpeed != null)
-        {
-            cloudsMaterial.SetFloat("_weatherMapSpeed", clouds.WeatherMapSpeed.value);
-        }
-        if (clouds.MaskNoiseSpeed != null)
-        {
-            cloudsMaterial.SetFloat("_maskNoiseSpeed", clouds.MaskNoiseSpeed.value);
-        }
-        if (clouds.ShapeTiling != null)
-        {
-            cloudsMaterial.SetFloat("_shapeTiling", clouds.ShapeTiling.value);
-        }
-        if (clouds.HeightWeights != null)
-        {
-            cloudsMaterial.SetFloat("_heightWeights", clouds.HeightWeights.value);
-        }
-        if (clouds.ShapeNoiseWeights != null)
-        {
-            cloudsMaterial.SetVector("_shapeNoiseWeights", clouds.ShapeNoiseWeights.value);
-        }
-        if (clouds.DensityOffset != null)
-        {
-            cloudsMaterial.SetFloat("_densityOffset", clouds.DensityOffset.value);
-        }
-        if (clouds.DetailWeights != null)
-        {
-            cloudsMaterial.SetFloat("_detailWeights", clouds.DetailWeights.value);
-        }
-        if (clouds.DensityMultiplier != null)
-        {
-            cloudsMaterial.SetFloat("_densityMultiplier", clouds.DensityMultiplier.value);
-        }
-        if (clouds.DetailNoiseWeight != null)
-        {
-            cloudsMaterial.SetFloat("_detailNoiseWeight", clouds.DetailNoiseWeight.value);
-        }
-        if (clouds.WeatherMapUvScale != null)
-        {
-            cloudsMaterial.SetFloat("_weatherMapUvScale", clouds.WeatherMapUvScale.value);
-        }
-        if (clouds.MaskNoiseUvScale != null)
-        {
-            cloudsMaterial.SetFloat("_maskNoiseUvScale", clouds.MaskNoiseUvScale.value);
-        }
-        if (clouds.ShapeNoiseUvScale != null)
-        {
-            cloudsMaterial.SetFloat("_shapeNoiseUvScale", clouds.ShapeNoiseUvScale.value);
-        }
-        if (clouds.DetailNoiseUvScale != null)
-        {
-            cloudsMaterial.SetFloat("_detailNoiseUvScale", clouds.DetailNoiseUvScale.value);
-        }
+
+        cloudsMaterial.SetTexture("_Basic3DTex", clouds.Basic3DTex.value);
+
+        cloudsMaterial.SetTexture("_WeatherMap", clouds.WeatherTexture.value);
+
+        cloudsMaterial.SetTexture("_Detail3DTex", clouds.Detail3DTex.value);
+
+        cloudsMaterial.SetTexture("_maskNoise", clouds.MaskNoise.value);
+
+        cloudsMaterial.SetTexture("_BlueNoise", clouds.BlueNoise.value);
+
+        cloudsMaterial.SetFloat("_shapeTune", clouds.ShapeTune.value);
+
+        cloudsMaterial.SetFloat("_detailTune", clouds.DetailTune.value);
+
+        cloudsMaterial.SetFloat("_shapeSpeed", clouds.ShapeSpeed.value);
+
+        cloudsMaterial.SetFloat("_setailSpeed", clouds.DetailSpeed.value);
+
+        cloudsMaterial.SetFloat("_weatherMapSpeed", clouds.WeatherMapSpeed.value);
+
+        cloudsMaterial.SetFloat("_maskNoiseSpeed", clouds.MaskNoiseSpeed.value);
+
+        cloudsMaterial.SetFloat("_shapeTiling", clouds.ShapeTiling.value);
+
+        cloudsMaterial.SetFloat("_heightWeights", clouds.HeightWeights.value);
+
+        cloudsMaterial.SetVector("_shapeNoiseWeights", clouds.ShapeNoiseWeights.value);
+
+
+        cloudsMaterial.SetFloat("_densityOffset", clouds.DensityOffset.value);
+
+
+        cloudsMaterial.SetFloat("_detailWeights", clouds.DetailWeights.value);
+
+
+        cloudsMaterial.SetFloat("_densityMultiplier", clouds.DensityMultiplier.value);
+
+
+        cloudsMaterial.SetFloat("_detailNoiseWeight", clouds.DetailNoiseWeight.value);
+
+
+        cloudsMaterial.SetFloat("_weatherMapUvScale", clouds.WeatherMapUvScale.value);
+
+
+        cloudsMaterial.SetFloat("_maskNoiseUvScale", clouds.MaskNoiseUvScale.value);
+
+
+        cloudsMaterial.SetFloat("_shapeNoiseUvScale", clouds.ShapeNoiseUvScale.value);
+
+
+        cloudsMaterial.SetFloat("_detailNoiseUvScale", clouds.DetailNoiseUvScale.value);
+
+
+        cloudsMaterial.SetFloat("_cloudAbsorbTune", clouds.CloudAbsorbTune.value);
+
         /******************************************************************************************************************/
 
-        cmd.SetGlobalTexture(MainTexId, source);                // 获取当前摄像机渲染的图片
-        cmd.GetTemporaryRT(destination, cameraData.camera.scaledPixelWidth, cameraData.camera.scaledPixelHeight, 0, FilterMode.Trilinear, RenderTextureFormat.Default);
-        cmd.Blit(source, destination);                          // 设置后处理
-        cmd.Blit(destination, source, cloudsMaterial, 0);    // 传入颜色校正
+        cmd.GetTemporaryRT(CloudId, cameraData.camera.scaledPixelWidth, cameraData.camera.scaledPixelHeight, 0, FilterMode.Trilinear, RenderTextureFormat.Default);
+        cmd.GetTemporaryRT(BlurId, cameraData.camera.scaledPixelWidth, cameraData.camera.scaledPixelHeight, 0, FilterMode.Trilinear, RenderTextureFormat.Default);
+
+        cmd.Blit(source, CloudId, cloudsMaterial, 0);//添加体积云
+        for (int i = 0; i < blurLoop; i++)
+        {
+            cmd.Blit(CloudId, BlurId, cloudsMaterial, 1);//模糊
+            cmd.Blit(BlurId, CloudId);
+        }
+        cmd.Blit(CloudId, BlurId, cloudsMaterial, 2);//合并结果
+        cmd.Blit(BlurId, source);
+
+        cmd.ReleaseTemporaryRT(CloudId);
+        cmd.ReleaseTemporaryRT(BlurId);
+        // // cmd.SetGlobalTexture(MainTexId, source);                // 获取当前摄像机渲染的图片
+        // cmd.GetTemporaryRT(destination, cameraData.camera.scaledPixelWidth, cameraData.camera.scaledPixelHeight, 0, FilterMode.Trilinear, RenderTextureFormat.Default);
+        // cmd.Blit(source, destination);                          // 设置后处理
+        // cmd.Blit(destination, source, cloudsMaterial, 0);    // 传入颜色校正
     }
 }
