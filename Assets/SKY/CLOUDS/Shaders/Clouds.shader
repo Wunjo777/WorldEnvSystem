@@ -257,7 +257,7 @@ Shader "Shaders/Clouds"
 
             float2 totalTransmittance = CloudRayMarching((_WorldSpaceCameraPos + worldViewDir * dstToBox), worldViewDir, dstLimit, blueNoise);
 
-            float4 col = tex2D(_MainTex, IN.uv);
+            // float4 col = tex2D(_MainTex, IN.uv);
             // col.rgb *= totalTransmittance.x;
             // col.rgb += _MainLightColor * totalTransmittance.y;
             return float4(totalTransmittance.x, totalTransmittance.y * 0.42, 0, 1);
@@ -339,9 +339,9 @@ Pass
 
         float4 oCol = tex2D(_MainTex, IN.uv);
         float4 lCol = tex2D(_FinalTex, IN.uv);
-        float3 dCol = lCol.xyz * oCol.x + (_MainLightColor.xyz) * oCol.y; // 原图和计算后的图叠加
 
-        return float4(dCol, 1);
+        float3 dCol = lCol.xyz * oCol.x + _MainLightColor.xyz * oCol.y + (1 - oCol.x) * _GlossyEnvironmentColor.xyz; // 原图和计算后的图叠加
+        return float4(dCol.rgb, 1);
     }
     ENDHLSL
 }

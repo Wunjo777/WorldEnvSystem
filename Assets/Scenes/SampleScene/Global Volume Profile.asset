@@ -88,13 +88,13 @@ MonoBehaviour:
     m_Value: 0.2
   ShapeSpeed:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.01
   DetailSpeed:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.01
   WeatherMapSpeed:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.01
   MaskNoiseSpeed:
     m_OverrideState: 1
     m_Value: 0.025
