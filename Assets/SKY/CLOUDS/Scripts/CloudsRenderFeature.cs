@@ -14,7 +14,7 @@ public class CloudsRenderFeature : ScriptableRendererFeature
 
     public class Settings      // 初始设置
     {
-        public RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;        // 设置渲染顺序  在后处理前
+        public RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;        // 设置渲染顺序  在后处理前
         public Shader shader;      // 设置后处理Shader
     }
 
@@ -26,7 +26,7 @@ public class CloudsRenderFeature : ScriptableRendererFeature
     //被调用时执行，用于初始化
     {
         this.name = "CloudsPass";        // 外部显示名字
-        cloudsPass = new CloudsPass(RenderPassEvent.BeforeRenderingPostProcessing, settings.shader);      // 初始化Pass
+        cloudsPass = new CloudsPass(RenderPassEvent.AfterRenderingPostProcessing, settings.shader);      // 初始化Pass
     }
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) // Pass执行逻辑
     //每帧都会调用，渲染摄像机内容  

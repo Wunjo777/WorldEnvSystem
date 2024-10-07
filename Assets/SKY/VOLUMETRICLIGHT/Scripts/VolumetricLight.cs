@@ -1,6 +1,3 @@
-/////////////////////////////
-/*This file is not used.*/
-/////////////////////////////
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;

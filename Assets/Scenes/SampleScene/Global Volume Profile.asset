@@ -24,13 +24,13 @@ MonoBehaviour:
     m_Value: 1
   scatter:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 1
   clamp:
     m_OverrideState: 0
     m_Value: 65472
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.7524549, b: 0, a: 1}
+    m_Value: {r: 1, g: 0.4615385, b: 0, a: 1}
   highQualityFiltering:
     m_OverrideState: 0
     m_Value: 0
@@ -147,10 +147,40 @@ MonoBehaviour:
   m_Name: Global Volume Profile
   m_EditorClassIdentifier: 
   components:
-  - {fileID: -2842301904862832566}
-  - {fileID: 7709309527486650010}
-  - {fileID: 7025710623405667057}
   - {fileID: -5642643657224906594}
+  - {fileID: 7025710623405667057}
+  - {fileID: -2842301904862832566}
+  - {fileID: 4755845666520323443}
+  - {fileID: 7709309527486650010}
+--- !u!114 &4755845666520323443
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd56303e85e0d904f9c07533f42bd4dc, type: 3}
+  m_Name: LightShaft
+  m_EditorClassIdentifier: 
+  active: 1
+  LightTransform: {fileID: 0}
+  colorThreshold:
+    m_OverrideState: 1
+    m_Value: {x: 0.5, y: 0.5, z: 0.5}
+  lightRadius:
+    m_OverrideState: 1
+    m_Value: 3
+  lightPowFactor:
+    m_OverrideState: 1
+    m_Value: 5
+  offsets:
+    m_OverrideState: 1
+    m_Value: 0.02
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.5
 --- !u!114 &7025710623405667057
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -203,7 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e722901a8a1c3479efd3c1357baacf, type: 3}
   m_Name: Atmosphere
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   LightIntensity:
     m_OverrideState: 1
     m_Value: 0

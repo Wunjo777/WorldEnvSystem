@@ -8,7 +8,8 @@ Shader "Shaders/VolumetricLight"
     }
     SubShader
     {
-        Tags{"RenderPipeline" = "UniversalPipeline"} Cull Off Zwrite Off ZTest Always
+        Tags{"RenderPipeline" = "UniversalPipeline"
+                                "LightMode" = "UniversalForward"} Cull Off Zwrite Off ZTest Always
             HLSLINCLUDE
 
 #define MAX_MARCH_STEP 16

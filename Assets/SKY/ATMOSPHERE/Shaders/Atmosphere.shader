@@ -57,11 +57,10 @@ Shader "Shaders/Atmosphere"
 
                 /*********************/
                 // 视线和大气交点
-                float3 planetCenter = float3(0, -_PlanetRadius, 0);
-                float rayLength = RaySphereIntersection(_WorldSpaceCameraPos.xyz, worldViewDir, planetCenter, _AtmosphereRadius).y;
+                float rayLength = RaySphereIntersection(_WorldSpaceCameraPos.xyz, worldViewDir, PlanetCenter, _AtmosphereRadius).y;
 
                 // float rayLength = atmosIntersection.y;
-                float groundIntersec = RaySphereIntersection(_WorldSpaceCameraPos.xyz, worldViewDir, planetCenter, _PlanetRadius).x;
+                float groundIntersec = RaySphereIntersection(_WorldSpaceCameraPos.xyz, worldViewDir, PlanetCenter, _PlanetRadius).x;
                 if (groundIntersec > 0)
                     rayLength = min(rayLength, groundIntersec);
                 // return 0.01;
@@ -77,19 +76,19 @@ Shader "Shaders/Atmosphere"
                     // calculate t1
 #ifdef TEMPORALCALCULATION
                     /////////////This is the original method of calculating dcp:
-                    // float dis = RaySphereIntersection(p, MainLightDirection, planetCenter, _AtmosphereRadius).y;
+                    // float dis = RaySphereIntersection(p, MainLightDirection, PlanetCenter, _AtmosphereRadius).y;
                     // float3 c = p + MainLightDirection * (dis + 0.000000001); // 增加微小偏移，防止噪点
                     // float2 dcp = calOpticalDepth(HR_HM, _PlanetRadius, p, c);
 
                     /////////////This is the brand new method of calculating dcp:
-                    float r = length(p - planetCenter);
-                    float3 upVector = normalize(p - planetCenter);
+                    float r = length(p - PlanetCenter);
+                    float3 upVector = normalize(p - PlanetCenter);
                     float mu = dot(upVector, MainLightDirection);
                     float2 dcp = calOpticalDepthLut(r, mu);
 #endif
 #ifdef SAMPLELUT
-                    float r = length(p - planetCenter);
-                    float3 upVector = normalize(p - planetCenter);
+                    float r = length(p - PlanetCenter);
+                    float3 upVector = normalize(p - PlanetCenter);
                     float mu = dot(upVector, MainLightDirection);
                     float2 transLutUv = GetTransmittanceLutUv(_PlanetRadius, _AtmosphereRadius, r, mu);
                     float2 dcp = _TransmittanceLut.SampleLevel(sampler_TransmittanceLut, transLutUv, 0).rg;
@@ -117,8 +116,8 @@ Shader "Shaders/Atmosphere"
                     totalResult += G_All * sigma_s * t2 * step;
 #endif
 #ifdef SAMPLELUT
-                    float h = length(p - planetCenter) - _PlanetRadius;
-                    float cosSunZenithAngle = dot(normalize(p - planetCenter), MainLightDirection);
+                    float h = length(p - PlanetCenter) - _PlanetRadius;
+                    float cosSunZenithAngle = dot(normalize(p - PlanetCenter), MainLightDirection);
                     float2 MulScaUv = float2(cosSunZenithAngle * 0.5 + 0.5, h / (_AtmosphereRadius - _PlanetRadius));
                     float3 G_All = _MultiscatteringLut.SampleLevel(sampler_MultiscatteringLut, MulScaUv, 0).rgb;
 

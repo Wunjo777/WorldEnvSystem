@@ -15,6 +15,8 @@
 #define _PlanetRadius 6371000
 #define _AtmosphereRadius 6421000
 
+#define PlanetCenter float3(0, -_PlanetRadius, 0)
+
 #define RayleighCoefficient float3(5.19673, 12.1427, 29.6453) * 1e-6
 #define MieCoefficient float3(3.996, 3.996, 3.996) * 1e-6
 

@@ -24,7 +24,7 @@ float2 RaySphereIntersection(float3 rayOrigin, float3 rayDir, float3 sphereCente
 	float judge = b * b - 4 * a * c;
 	if (judge < 0)
 	{
-		return float2(-1, -1);
+		return float2(0, 0);
 	}
 	else
 	{
@@ -85,8 +85,7 @@ float2 GetTransmittanceLutRmu(float bottomRadius, float topRadius, float2 uv)
 
 float2 calDensity(float3 p, float planetRadius)
 {
-	float3 planetCenter = float3(0, -planetRadius, 0);
-	float h = abs(length(p - planetCenter)) - planetRadius;
+	float h = abs(length(p - PlanetCenter)) - planetRadius;
 	float2 localDensity = exp(-(h.xx / HR_HM));
 	return localDensity;
 }
@@ -97,7 +96,6 @@ float2 calOpticalDepth(float planetRadius, float3 pSt, float3 pEd)
 	float3 dir = normalize(pEd - pSt);
 	float dis = length(pEd - pSt);
 	float step = dis / N_SAMPLE; // 步长
-	float3 planetCenter = float3(0, -planetRadius, 0);
 	float3 p = pSt + dir * step * 0.5;
 	float2 totalOpticalDepth = 0;
 	for (int i = 0; i < N_SAMPLE; i++)
@@ -129,7 +127,6 @@ float2 calOpticalDepthLut(float r, float mu)
 // 计算多重散射查找表
 float3 calMultiscatteringLut(float3 samplePoint, float3 lightDir, Texture2D _TransmittanceLut, SamplerState sampler_TransmittanceLut)
 {
-	const float3 planetCenter = float3(0, -_PlanetRadius, 0);
 
 	const int N_DIRECTION = 64;
 	const int N_SAMPLE = 64;
@@ -209,8 +206,8 @@ float3 calMultiscatteringLut(float3 samplePoint, float3 lightDir, Texture2D _Tra
 	{
 		// 光线和大气层求交
 		float3 viewDir = RandomSphereSamples[i]; // 随机采样球面积分方向
-		float dis = RaySphereIntersection(samplePoint, viewDir, planetCenter, _AtmosphereRadius).y;
-		float d = RaySphereIntersection(samplePoint, viewDir, planetCenter, _PlanetRadius).x;
+		float dis = RaySphereIntersection(samplePoint, viewDir, PlanetCenter, _AtmosphereRadius).y;
+		float d = RaySphereIntersection(samplePoint, viewDir, PlanetCenter, _PlanetRadius).x;
 		if (d > 0)
 			dis = min(dis, d);
 		float ds = dis / float(N_SAMPLE);
@@ -219,8 +216,8 @@ float3 calMultiscatteringLut(float3 samplePoint, float3 lightDir, Texture2D _Tra
 
 		for (int j = 0; j < N_SAMPLE; j++)
 		{
-			float r = length(p - planetCenter);
-			float3 upVector = normalize(p - planetCenter);
+			float r = length(p - PlanetCenter);
+			float3 upVector = normalize(p - PlanetCenter);
 			float mu = dot(upVector, lightDir);
 			float2 transLutUv = GetTransmittanceLutUv(_PlanetRadius, _AtmosphereRadius, r, mu);
 			float2 dcp = _TransmittanceLut.SampleLevel(sampler_TransmittanceLut, transLutUv, 0).rg;

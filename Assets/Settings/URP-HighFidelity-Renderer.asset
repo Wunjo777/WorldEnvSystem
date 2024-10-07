@@ -71,7 +71,8 @@ MonoBehaviour:
   - {fileID: -1878332245247344467}
   - {fileID: 1051203214093369848}
   - {fileID: -7671440825377050906}
-  m_RendererFeatureMap: adc0de57c6d2eee5f8c1c8f2c09f960ee6aef8df36918995
+  - {fileID: 7175909561843304605}
+  m_RendererFeatureMap: adc0de57c6d2eee5f8c1c8f2c09f960ee6aef8df369189959dc8ff15baf39563
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -130,3 +131,19 @@ MonoBehaviour:
   settings:
     renderPassEvent: 550
     shader: {fileID: 4800000, guid: 7b0e96d66a94a5341819e13d09a3e135, type: 3}
+--- !u!114 &7175909561843304605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74b855fcc31ac8442aa6e9286959bf0c, type: 3}
+  m_Name: LightShaftPass
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    renderPassEvent: 550
+    shader: {fileID: 4800000, guid: 7d5a57b8f5bffd64d95929ba3ab52de8, type: 3}
