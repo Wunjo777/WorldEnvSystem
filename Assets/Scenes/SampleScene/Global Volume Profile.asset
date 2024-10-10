@@ -24,13 +24,13 @@ MonoBehaviour:
     m_Value: 1
   scatter:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.7
   clamp:
     m_OverrideState: 0
     m_Value: 65472
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.4615385, b: 0, a: 1}
+    m_Value: {r: 1, g: 0.59425545, b: 0, a: 1}
   highQualityFiltering:
     m_OverrideState: 0
     m_Value: 0
@@ -106,10 +106,10 @@ MonoBehaviour:
     m_Value: 0.5
   ShapeNoiseWeights:
     m_OverrideState: 1
-    m_Value: {x: 4, y: 50, z: -3.18, w: -20}
+    m_Value: {x: 0.1, y: 50, z: 31.51, w: -20}
   DensityOffset:
     m_OverrideState: 1
-    m_Value: -13.1
+    m_Value: -17
   DetailWeights:
     m_OverrideState: 1
     m_Value: 2
@@ -118,19 +118,19 @@ MonoBehaviour:
     m_Value: 0.5
   DetailNoiseWeight:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.3
   WeatherMapUvScale:
     m_OverrideState: 1
     m_Value: 1
   MaskNoiseUvScale:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 7
   ShapeNoiseUvScale:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.2
   DetailNoiseUvScale:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1.5
   CloudAbsorbTune:
     m_OverrideState: 1
     m_Value: 5
@@ -180,7 +180,7 @@ MonoBehaviour:
     m_Value: 0.02
   intensity:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.3
 --- !u!114 &7025710623405667057
 MonoBehaviour:
   m_ObjectHideFlags: 3

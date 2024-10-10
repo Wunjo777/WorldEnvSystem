@@ -120,7 +120,7 @@ Pass
 
         float3 oCol = _MainTex.SampleLevel(sampler_MainTex, IN.uv, 0).rgb;
         float3 lCol = _FinalTex.SampleLevel(sampler_FinalTex, IN.uv, 0).rgb;
-        oCol *= depth ? 0 : 1;
+        // oCol *= depth ? 0 : 1;
         float3 dCol = lCol + oCol * _Intensity * _MainLightColor; // 原图和计算后的图叠加
 
         return float4(dCol, 1);

@@ -6,7 +6,7 @@
 #include "Assets/SKY/ATMOSPHERE/Shaders/Utils/AtmosMath.hlsl"
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
-RWTexture2D<float2> TransmittanceResult;
+RWTexture2D<float4> TransmittanceResult;
 RWTexture2D<float4> MultiscatteringResult;
 
 Texture2D _TransmittanceLut;
@@ -19,8 +19,8 @@ void TRANSmittance (uint3 id : SV_DispatchThreadID)
     float2 pixPos = id.xy+0.5f;
     float2 uv = pixPos/float2(TRANSMITTANCE_TEXTURE_WIDTH,TRANSMITTANCE_TEXTURE_HEIGHT);//float2(id.x / (float)TRANSMITTANCE_TEXTURE_WIDTH, (id.y) / (float)TRANSMITTANCE_TEXTURE_HEIGHT);
     float2 rMu = GetTransmittanceLutRmu(_PlanetRadius,_AtmosphereRadius,uv);
-    float2 res = calOpticalDepthLut(rMu.x, rMu.y);
-    TransmittanceResult[id.xy] = res;//float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
+    float3 res = calOpticalDepthLut(rMu.x, rMu.y);
+    TransmittanceResult[id.xy] = float4(res,1);//float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
 }
 
 [numthreads(8,8,1)]//定义线程组中的线程数量

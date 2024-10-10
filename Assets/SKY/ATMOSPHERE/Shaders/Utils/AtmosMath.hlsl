@@ -33,6 +33,16 @@ float2 RaySphereIntersection(float3 rayOrigin, float3 rayDir, float3 sphereCente
 	}
 }
 
+float3 OzoneAbsorption(float h)
+{
+	float2 OzoneLevel = float2(25000, 15000);
+	float3 sigma_lambda = float3(0.650, 1.881, 0.085) * 1e-6;
+	float center = OzoneLevel.x;
+	float width = OzoneLevel.y;
+	float rho = max(0, 1.0 - (abs(h - center) / width));
+	return sigma_lambda * rho;
+}
+
 float RayleiPhase(float cos)
 {
 	return (3.0 / (16.0 * PI)) * (1.0 + cos * cos);
@@ -83,14 +93,14 @@ float2 GetTransmittanceLutRmu(float bottomRadius, float topRadius, float2 uv)
 	return float2(r, mu);
 }
 
-float2 calDensity(float3 p, float planetRadius)
+float2 calDensity(float3 p)
 {
-	float h = abs(length(p - PlanetCenter)) - planetRadius;
+	float h = length(p - PlanetCenter) - _PlanetRadius;
 	float2 localDensity = exp(-(h.xx / HR_HM));
 	return localDensity;
 }
 
-float2 calOpticalDepth(float planetRadius, float3 pSt, float3 pEd)
+float2 calOpticalDepth(float3 pSt, float3 pEd)
 {
 	const int N_SAMPLE = 32;
 	float3 dir = normalize(pEd - pSt);
@@ -101,27 +111,27 @@ float2 calOpticalDepth(float planetRadius, float3 pSt, float3 pEd)
 	for (int i = 0; i < N_SAMPLE; i++)
 	{
 		p += dir * step;
-		float2 localDensity = calDensity(p, planetRadius);
+		float2 localDensity = calDensity(p);
 		totalOpticalDepth += localDensity * step;
 	}
 	return totalOpticalDepth;
 }
 
 // 计算大气透视查找表
-float2 calOpticalDepthLut(float r, float mu)
+float3 calOpticalDepthLut(float r, float mu)
 {
 	const int N_SAMPLE = 64;
 	float cos = -mu;
 	float dis = r * cos + safeSqrt(r * r * (cos * cos - 1) + _AtmosphereRadius * _AtmosphereRadius);
 	float step = max(0, dis) / N_SAMPLE;
-	float2 totalOpticalDepth = 0;
+	float3 totalOpticalDepth = 0;
 	for (int i = 0; i < N_SAMPLE; i++)
 	{
 		float b = i * step;
 		float h = safeSqrt(r * r + b * b - 2 * r * b * cos) - _PlanetRadius;
-		totalOpticalDepth += float2(exp(-(h.xx / HR_HM))) * step;
+		totalOpticalDepth += (exp(-(h / HR_HM.x)) * RayleighCoefficient + exp(-(h / HR_HM.y)) * (MieCoefficient + MieAbsorptionCoefficient) + OzoneAbsorption(h)) * step;
 	}
-	return totalOpticalDepth;
+	return exp(-totalOpticalDepth);
 }
 
 // 计算多重散射查找表
@@ -211,7 +221,7 @@ float3 calMultiscatteringLut(float3 samplePoint, float3 lightDir, Texture2D _Tra
 		if (d > 0)
 			dis = min(dis, d);
 		float ds = dis / float(N_SAMPLE);
-		float2 dpa = 0;
+		float3 dpa = 0;
 		float3 p = samplePoint + (viewDir * ds) * 0.5;
 
 		for (int j = 0; j < N_SAMPLE; j++)
@@ -220,16 +230,18 @@ float3 calMultiscatteringLut(float3 samplePoint, float3 lightDir, Texture2D _Tra
 			float3 upVector = normalize(p - PlanetCenter);
 			float mu = dot(upVector, lightDir);
 			float2 transLutUv = GetTransmittanceLutUv(_PlanetRadius, _AtmosphereRadius, r, mu);
-			float2 dcp = _TransmittanceLut.SampleLevel(sampler_TransmittanceLut, transLutUv, 0).rg;
-			float3 t1 = exp(-(dcp.x * RayleighCoefficient + dcp.y * MieCoefficient));
+			float3 t1 = _TransmittanceLut.SampleLevel(sampler_TransmittanceLut, transLutUv, 0).xyz;
+			// float3 t1 = exp(-(dcp.x * RayleighCoefficient + dcp.y * MieCoefficient));
 
 			// calculate t2
-			float2 dens = calDensity(p, _PlanetRadius);
-			dpa += dens * ds;
-			float3 t2 = exp(-(dpa.x * RayleighCoefficient + dpa.y * MieCoefficient));
+			float h = abs(length(p - PlanetCenter) - _PlanetRadius);
+			float2 dens = calDensity(p);
+			dpa += (dens.x * RayleighCoefficient + dens.y * (MieCoefficient + MieAbsorptionCoefficient) + OzoneAbsorption(h)) * ds;
+			float3 t2 = exp(-dpa);
+			// float3 t2 = exp(-(dpa.x * RayleighCoefficient + dpa.y * MieCoefficient));
 
 			// calculate scattering
-			float2 locDens = calDensity(p, _PlanetRadius);
+			float2 locDens = calDensity(p);
 			float cos = dot(lightDir, viewDir);
 			float3 scatteringR = locDens.x * RayleighCoefficient * RayleiPhase(cos);
 			float3 scatteringM = locDens.y * MieCoefficient * MiePhase(cos);

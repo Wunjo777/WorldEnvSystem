@@ -17,7 +17,7 @@ public class LUTCalController : MonoBehaviour
         ///////////////////////////////Transmittance Part///////////////////////////////
         _TransmittanceKernel = computeShader.FindKernel("TRANSmittance");
         // Create RenderTexture
-        transmittanceTex = new RenderTexture(256, 64, 0, RenderTextureFormat.RGFloat);
+        transmittanceTex = new RenderTexture(256, 64, 0, RenderTextureFormat.ARGBFloat);
         transmittanceTex.enableRandomWrite = true;
         transmittanceTex.Create();
         // Assign the texture to the material

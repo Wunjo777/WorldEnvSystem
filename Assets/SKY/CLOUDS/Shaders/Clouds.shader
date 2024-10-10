@@ -26,7 +26,7 @@ Shader "Shaders/Clouds"
 
 #define TAU (PI * 2.0)
 
-#define MAX_MARCH_STEP 24
+#define MAX_MARCH_STEP 32
 #define MAX_LIGHT_MARCH_STEP 8
 
             struct Attributes
