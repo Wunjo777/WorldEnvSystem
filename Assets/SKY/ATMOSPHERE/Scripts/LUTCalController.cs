@@ -25,6 +25,7 @@ public class LUTCalController : MonoBehaviour
         // Assign the texture to the compute shader
         computeShader.SetTexture(_TransmittanceKernel, "TransmittanceResult", transmittanceTex);
         // Dispatch the compute shader
+        //每个维度对应 线程组数量*每组线程数量=图片分辨率 则每个线程对应一个像素
         computeShader.Dispatch(_TransmittanceKernel, 32, 8, 1);
         ///////////////////////////////Multiscattering Part///////////////////////////////
         _MultiscatteringKernel = computeShader.FindKernel("MULTIscattering");

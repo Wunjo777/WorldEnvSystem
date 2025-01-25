@@ -16,20 +16,23 @@ Shader "Shaders/Clouds"
     }
     SubShader
     {
-        Tags{"RenderPipeline" = "UniversalPipeline"
-                                "LightMode" = "UniversalForward"} Cull Off Zwrite Off ZTest Always
-            HLSLINCLUDE
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-#include "Assets/SKY/ATMOSPHERE/Shaders/Utils/Common.hlsl"
+        Tags
+        {
+            "RenderPipeline" = "UniversalPipeline"
+            "LightMode" = "UniversalForward"
+        } Cull Off Zwrite Off ZTest Always
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+        #include "Assets/SKY/ATMOSPHERE/Shaders/Utils/Common.hlsl"
 
-#define TAU (PI * 2.0)
+        #define TAU (PI * 2.0)
 
-#define MAX_MARCH_STEP 32
-#define MAX_LIGHT_MARCH_STEP 8
+        #define MAX_MARCH_STEP 32
+        #define MAX_LIGHT_MARCH_STEP 8
 
-            struct Attributes
+        struct Attributes
         {
             float4 positionOS : POSITION;
             float2 texcoord : TEXCOORD0;
@@ -42,39 +45,39 @@ Shader "Shaders/Clouds"
         };
 
         CBUFFER_START(UnityPerMaterial)
-        sampler2D _MainTex;
-        float4 _MainTex_TexelSize;
-        float4 _MainTex_ST;
-        sampler3D _Basic3DTex;
-        sampler3D _Detail3DTex;
-        float3 _boundsMin;
-        float3 _boundsMax;
-        sampler2D _WeatherMap;
-        float4 _WeatherMap_ST;
-        sampler2D _maskNoise;
-        float4 _maskNoise_ST;
-        sampler2D _BlueNoise;
-        float4 _BlueNoise_ST;
-        sampler2D _FinalTex;
+            sampler2D _MainTex;
+            float4 _MainTex_TexelSize;
+            float4 _MainTex_ST;
+            sampler3D _Basic3DTex;
+            sampler3D _Detail3DTex;
+            float3 _boundsMin;
+            float3 _boundsMax;
+            sampler2D _WeatherMap;
+            float4 _WeatherMap_ST;
+            sampler2D _maskNoise;
+            float4 _maskNoise_ST;
+            sampler2D _BlueNoise;
+            float4 _BlueNoise_ST;
+            sampler2D _FinalTex;
 
-        float _shapeTune = 0.1;
-        float _detailTune = 0.1;
-        float _shapeSpeed = 0.05;
-        float _detailSpeed = 0.05;
-        float _weatherMapSpeed = 0.05;
-        float _maskNoiseSpeed = 0.025;
-        float _shapeTiling = 0.0002;
-        float _heightWeights = 0.5;
-        float4 _shapeNoiseWeights = float4(4, 50, -3.18, -20);
-        float _densityOffset = -15;
-        float _detailWeights = 2;
-        float _densityMultiplier = 0.5;
-        float _detailNoiseWeight = 0.5;
-        float _weatherMapUvScale = 1;
-        float _maskNoiseUvScale = 2.6;
-        float _shapeNoiseUvScale = 0.5;
-        float _detailNoiseUvScale = 3;
-        float _cloudAbsorbTune = 4;
+            float _shapeTune = 0.1;
+            float _detailTune = 0.1;
+            float _shapeSpeed = 0.05;
+            float _detailSpeed = 0.05;
+            float _weatherMapSpeed = 0.05;
+            float _maskNoiseSpeed = 0.025;
+            float _shapeTiling = 0.0002;
+            float _heightWeights = 0.5;
+            float4 _shapeNoiseWeights = float4(4, 50, -3.18, -20);
+            float _densityOffset = -15;
+            float _detailWeights = 2;
+            float _densityMultiplier = 0.5;
+            float _detailNoiseWeight = 0.5;
+            float _weatherMapUvScale = 1;
+            float _maskNoiseUvScale = 2.6;
+            float _shapeNoiseUvScale = 0.5;
+            float _detailNoiseUvScale = 3;
+            float _cloudAbsorbTune = 4;
         CBUFFER_END
 
         Varings vert(Attributes IN)
@@ -105,6 +108,7 @@ Shader "Shaders/Clouds"
             float4 tonalDifference = centerColor - currentColor;
             return GaussianWeight2(tonalDifference, _TonalWeight) * GaussianWeight(spacialDifference, _SpatialWeight);
         }
+
         //////////////////////////////////////
 
         // 光在云中的折射，糖粉效应
@@ -131,10 +135,19 @@ Shader "Shaders/Clouds"
             float3 size = _boundsMax - _boundsMin;
             float2 uv = p.xz / float2(size.x, size.z);
 
-            float4 weatherMap = tex2D(_WeatherMap, float4(TRANSFORM_TEX(uv, _WeatherMap) * _weatherMapUvScale + float2(speedWeatherMap, 0), 0, 0));
-            float4 maskNoise = tex2D(_maskNoise, float4(TRANSFORM_TEX(uv, _maskNoise) * _maskNoiseUvScale + float2(speedmaskNoise, 0), 0, 0));
+            float4 weatherMap = tex2D(_WeatherMap,
+                                                                       float4(
+                                                                           TRANSFORM_TEX(uv, _WeatherMap) *
+                                                                           _weatherMapUvScale + float2(
+                                                                               speedWeatherMap, 0), 0, 0));
+            float4 maskNoise = tex2D(
+                _maskNoise, float4(TRANSFORM_TEX(uv, _maskNoise) * _maskNoiseUvScale + float2(speedmaskNoise, 0), 0,
+                    0));
             float4 shapeNoise = tex3D(_Basic3DTex, float4(uvwShape * _shapeNoiseUvScale + maskNoise.r * _shapeTune, 0));
-            float4 detailNoise = tex3D(_Detail3DTex, float4(uvwDetail * _detailNoiseUvScale + shapeNoise.r * _detailTune, 0));
+            float4 detailNoise = tex3D(_Detail3DTex,
+                                                             float4(
+                                                                 uvwDetail * _detailNoiseUvScale + shapeNoise.r *
+                                                                 _detailTune, 0));
 
             // 边缘衰减
             const float containerEdgeFadeDst = 300;
@@ -145,8 +158,10 @@ Shader "Shaders/Clouds"
             float gMin = remap(weatherMap.x, 0, 1, 0.1, 0.6);
             float gMax = remap(weatherMap.x, 0, 1, gMin, 0.9);
             float heightPercent = (p.y - _boundsMin.y) / size.y; // 获取高度占比
-            float heightGradient = saturate(remap(heightPercent, 0.0, gMin, 0, 1)) * saturate(remap(heightPercent, 1, gMax, 0, 1));
-            float heightGradient2 = saturate(remap(heightPercent, 0.0, weatherMap.r, 1, 0)) * saturate(remap(heightPercent, 0.0, gMin, 0, 1));
+            float heightGradient = saturate(remap(heightPercent, 0.0, gMin, 0, 1)) * saturate(
+                remap(heightPercent, 1, gMax, 0, 1));
+            float heightGradient2 = saturate(remap(heightPercent, 0.0, weatherMap.r, 1, 0)) * saturate(
+                remap(heightPercent, 0.0, gMin, 0, 1));
             heightGradient = saturate(lerp(heightGradient, heightGradient2, _heightWeights));
 
             heightGradient *= edgeWeight;
@@ -226,7 +241,8 @@ Shader "Shaders/Clouds"
                     float dens = SampleDensity(curPos);
                     if (dens > 0)
                     {
-                        totalEnergy += dens * step * LightMarching(curPos, _MainLightPosition) * BeerPowder(totalDens) * phaseVal; // empty 1
+                        totalEnergy += dens * step * LightMarching(curPos, _MainLightPosition) * BeerPowder(totalDens) *
+                            phaseVal; // empty 1
                         totalDens *= exp(-dens * step * _MolarAbsorpCoe);
                     }
                     curStep += step;
@@ -239,11 +255,11 @@ Shader "Shaders/Clouds"
         {
             // 屏幕空间深度采样，REF：https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/writing-shaders-urp-reconstruct-world-position.html
             float2 UV = IN.positionHCS.xy / _ScaledScreenParams.xy;
-#if UNITY_REVERSED_Z
+            #if UNITY_REVERSED_Z
             real depth = SampleSceneDepth(UV);
-#else
+            #else
             real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
-#endif
+            #endif
             float3 worldPos = ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP);
             float3 worldViewDir = normalize(worldPos.xyz - _WorldSpaceCameraPos.xyz);
 
@@ -253,97 +269,101 @@ Shader "Shaders/Clouds"
             float2 boxDst = RayBoxDst(_boundsMin, _boundsMax, _WorldSpaceCameraPos, worldViewDir);
             float dstToBox = boxDst.x;
             float dstInsideBox = boxDst.y;
-            float dstLimit = max(0, min(length(worldPos.xyz - _WorldSpaceCameraPos.xyz) - dstToBox, dstInsideBox)); // 射线在包围盒内的有效距离
+            float dstLimit = max(0, min(length(worldPos.xyz - _WorldSpaceCameraPos.xyz) - dstToBox, dstInsideBox));
+            // 射线在包围盒内的有效距离
 
-            float2 totalTransmittance = CloudRayMarching((_WorldSpaceCameraPos + worldViewDir * dstToBox), worldViewDir, dstLimit, blueNoise);
+            float2 totalTransmittance = CloudRayMarching((_WorldSpaceCameraPos + worldViewDir * dstToBox), worldViewDir,
+                                                         dstLimit, blueNoise);
 
             // float4 col = tex2D(_MainTex, IN.uv);
             // col.rgb *= totalTransmittance.x;
             // col.rgb += _MainLightColor * totalTransmittance.y;
             return float4(totalTransmittance.x, totalTransmittance.y * 0.42, 0, 1);
         }
-
         ENDHLSL
 
-        Pass{
-            HLSLPROGRAM
-#pragma vertex vert
-#pragma fragment frag
-                ENDHLSL}
-        Pass{
-            HLSLPROGRAM
-#pragma vertex vert
-#pragma fragment blurFrag
-
-                float4 blurFrag(Varings IN) : SV_Target{
-                    // Kawase Blur:
-                    //             float _BlurRange = _MainTex_TexelSize.xy * 0.7;
-                    // float4 tex = tex2D(_MainTex, IN.uv); // 中心像素
-                    // tex += tex2D(_MainTex, IN.uv + float2(-1, -1) * _BlurRange);
-                    // tex += tex2D(_MainTex, IN.uv + float2(1, -1) * _BlurRange);
-                    // tex += tex2D(_MainTex, IN.uv + float2(-1, 1) * _BlurRange);
-                    // tex += tex2D(_MainTex, IN.uv + float2(1, 1) * _BlurRange);
-                    // return tex / 5.0;
-
-                    ////////////////////////////////////////////////////////////////////////////
-                    // Gaussian Blur:
-                    // float4 col = float4(0, 0, 0, 0);
-                    // float blurrange = 0.005;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(0.0, 0.0), 0) * 0.147716f;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(blurrange, 0.0), 0) * 0.118318f;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(0.0, -blurrange), 0) * 0.118318f;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(0.0, blurrange), 0) * 0.118318f;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(-blurrange, 0.0), 0) * 0.118318f;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(blurrange, blurrange), 0) * 0.0947416f;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(-blurrange, -blurrange), 0) * 0.0947416f;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(blurrange, -blurrange), 0) * 0.0947416f;
-                    // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(-blurrange, blurrange), 0) * 0.0947416f;
-                    // return col;
-                    ///////////////////////////////////////////////////////////////////////////
-                    // Bilateral Blur:
-                    float _BlurRadius = 2;
-
-        float4 numerator = float4(0, 0, 0, 0);
-        float4 denominator = float4(0, 0, 0, 0);
-
-        float4 centerColor = tex2D(_MainTex, IN.uv);
-
-        for (int iii = -1; iii < 2; iii++)
+        Pass
         {
-            for (int jjj = -1; jjj < 2; jjj++)
-            {
-                float2 offset = float2(iii, jjj) * _BlurRadius;
-
-                float2 currentUV = IN.uv + offset * _MainTex_TexelSize.xy;
-                float4 currentColor = tex2D(_MainTex, currentUV);
-
-                float4 weight = BilateralWeight(currentUV, IN.uv, currentColor, centerColor);
-                numerator += currentColor * weight;
-                denominator += weight;
-            }
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            ENDHLSL
         }
+        Pass
+        {
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment blurFrag
 
-        return numerator / denominator;
+            float4 blurFrag(Varings IN) : SV_Target
+            {
+                // Kawase Blur:
+                //             float _BlurRange = _MainTex_TexelSize.xy * 0.7;
+                // float4 tex = tex2D(_MainTex, IN.uv); // 中心像素
+                // tex += tex2D(_MainTex, IN.uv + float2(-1, -1) * _BlurRange);
+                // tex += tex2D(_MainTex, IN.uv + float2(1, -1) * _BlurRange);
+                // tex += tex2D(_MainTex, IN.uv + float2(-1, 1) * _BlurRange);
+                // tex += tex2D(_MainTex, IN.uv + float2(1, 1) * _BlurRange);
+                // return tex / 5.0;
+
+                ////////////////////////////////////////////////////////////////////////////
+                // Gaussian Blur:
+                // float4 col = float4(0, 0, 0, 0);
+                // float blurrange = 0.005;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(0.0, 0.0), 0) * 0.147716f;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(blurrange, 0.0), 0) * 0.118318f;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(0.0, -blurrange), 0) * 0.118318f;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(0.0, blurrange), 0) * 0.118318f;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(-blurrange, 0.0), 0) * 0.118318f;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(blurrange, blurrange), 0) * 0.0947416f;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(-blurrange, -blurrange), 0) * 0.0947416f;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(blurrange, -blurrange), 0) * 0.0947416f;
+                // col += _MainTex.SampleLevel(sampler_MainTex, IN.uv + float2(-blurrange, blurrange), 0) * 0.0947416f;
+                // return col;
+                ///////////////////////////////////////////////////////////////////////////
+                // Bilateral Blur:
+                float _BlurRadius = 2;
+
+                float4 numerator = float4(0, 0, 0, 0);
+                float4 denominator = float4(0, 0, 0, 0);
+
+                float4 centerColor = tex2D(_MainTex, IN.uv);
+
+                for (int iii = -1; iii < 2; iii++)
+                {
+                    for (int jjj = -1; jjj < 2; jjj++)
+                    {
+                        float2 offset = float2(iii, jjj) * _BlurRadius;
+
+                        float2 currentUV = IN.uv + offset * _MainTex_TexelSize.xy;
+                        float4 currentColor = tex2D(_MainTex, currentUV);
+
+                        float4 weight = BilateralWeight(currentUV, IN.uv, currentColor, centerColor);
+                        numerator += currentColor * weight;
+                        denominator += weight;
+                    }
+                }
+
+                return numerator / denominator;
+            }
+            ENDHLSL
+        }
+        Pass
+        {
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment mixFrag
+
+            float4 mixFrag(Varings IN) : SV_Target
+            {
+                float4 oCol = tex2D(_MainTex, IN.uv);
+                float4 lCol = tex2D(_FinalTex, IN.uv);
+
+                float3 dCol = lCol.xyz * oCol.x + _MainLightColor.xyz * oCol.y + (1 - oCol.x) * _GlossyEnvironmentColor.
+                    xyz; // 原图和计算后的图叠加
+                return float4(dCol.rgb, 1);
+            }
+            ENDHLSL
+        }
     }
-
-    ENDHLSL
-}
-Pass
-{
-    HLSLPROGRAM
-#pragma vertex vert
-#pragma fragment mixFrag
-
-    float4 mixFrag(Varings IN) : SV_Target
-    {
-
-        float4 oCol = tex2D(_MainTex, IN.uv);
-        float4 lCol = tex2D(_FinalTex, IN.uv);
-
-        float3 dCol = lCol.xyz * oCol.x + _MainLightColor.xyz * oCol.y + (1 - oCol.x) * _GlossyEnvironmentColor.xyz; // 原图和计算后的图叠加
-        return float4(dCol.rgb, 1);
-    }
-    ENDHLSL
-}
-}
 }

@@ -51,6 +51,23 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 3302065f671a8450b82c9ddf07426f3a, type: 3}
   - {fileID: 2800000, guid: 56a77a3e8d64f47b6afe9e3c95cb57d5, type: 3}
   m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
+--- !u!114 &-504395924601647545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e533de41698bc184ba8631509fcc5f92, type: 3}
+  m_Name: SsrPass
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    renderPassEvent: 300
+    shader: {fileID: 4800000, guid: b5cc8ddb4d1fad74e99323c9ddea4a80, type: 3}
+    HizComputeShader: {fileID: 7200000, guid: 010e96fd1c418c74090dd8b4de1afc76, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,7 +89,8 @@ MonoBehaviour:
   - {fileID: 1051203214093369848}
   - {fileID: -7671440825377050906}
   - {fileID: 7175909561843304605}
-  m_RendererFeatureMap: adc0de57c6d2eee5f8c1c8f2c09f960ee6aef8df369189959dc8ff15baf39563
+  - {fileID: -504395924601647545}
+  m_RendererFeatureMap: adc0de57c6d2eee5f8c1c8f2c09f960ee6aef8df369189959dc8ff15baf3956347cef637940600f9
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -104,9 +122,9 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_DefaultStencilState:
     overrideStencilState: 0
-    stencilReference: 0
-    stencilCompareFunction: 8
-    passOperation: 2
+    stencilReference: 1
+    stencilCompareFunction: 3
+    passOperation: 0
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
@@ -127,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8b51e08aad401d43ab5ef7ea55b4c03, type: 3}
   m_Name: CloudsPass
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 550
     shader: {fileID: 4800000, guid: 7b0e96d66a94a5341819e13d09a3e135, type: 3}
@@ -143,7 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b855fcc31ac8442aa6e9286959bf0c, type: 3}
   m_Name: LightShaftPass
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 550
     shader: {fileID: 4800000, guid: 7d5a57b8f5bffd64d95929ba3ab52de8, type: 3}
