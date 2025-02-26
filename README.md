@@ -2,7 +2,7 @@
 
 This is a personal project of mine aimed at implementing various natural environment effects in Unity.
 
-![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/showcase.png "Unity version:2022.3.17f1c1")
+![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/myclouds.png "Unity version:2022.3.17f1c1")
 
 ## Table of Contents
 
@@ -12,6 +12,10 @@ This is a personal project of mine aimed at implementing various natural environ
   - [Useful Knowledge](#useful-knowledge)
   - [Volumetric Clouds](#volumetric-clouds)
   - [Atmospheric Scattering](#atmospheric-scattering)
+  - [Parallax Occlusion Mapping](#parallax-occlusion-mapping)
+  - [Black Hole Effect](#black-hole-effect)
+  - [Screen Space Reflection](#screen-space-reflection)
+  - [Water Rendering](#water-rendering)
 
 ### Introduction
 
@@ -38,6 +42,7 @@ This project was developed using **Unity version 2022.3.17f1c1** with the Univer
 - [How to Use Compute Shader](https://zhuanlan.zhihu.com/p/368307575)
 
 #### Volumetric Clouds
+![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/myclouds.png "Unity version:2022.3.17f1c1")
 ###### Overall Approach
 The creation of volumetric clouds is based on screen-space post-processing effects and ray marching. In my project implementation, I used Axis-Aligned Bounding Box (AABB) to perform ray-box intersection tests from the camera, and draw clouds within the bounding box. The creation of volumetric clouds mainly involves the following two aspects:
 
@@ -54,6 +59,7 @@ Note that the ray marching calculations for the volumetric clouds are performed 
 - [Some Optimization Techniques](https://zhuanlan.zhihu.com/p/622654876)
 
 #### Atmospheric Scattering
+![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/mysky.png "Unity version:2022.3.17f1c1")
 ###### Overall Approach
 I implemented atmospheric scattering by writing a shader for the skybox (although it can also be achieved through screen-space post-processing effects, using the skybox makes it much easier to obtain lighting effects). Atmospheric scattering is also based on the ray marching method, where rays are cast from the camera, and the remaining energy of sunlight reaching the camera after scattering through the atmosphere is calculated using various physical formulas of scattering. Since the color variation of the sky is mainly related to light scattering (Rayleigh scattering and Mie scattering), I omitted the impact of absorption.
 
@@ -68,3 +74,19 @@ Atmospheric scattering ranges from simple to complex, starting with single scatt
 - [The Classic Paper of Precomputed Atmospheric Scattering(2008)](https://inria.hal.science/inria-00288758/file/article.pdf)
 - [A New Implementation of Precomputed Atmospheric Scattering(2017)(with online demo)](https://ebruneton.github.io/precomputed_atmospheric_scattering/)
 - [The Paper I Mentioned in Overall Approach(2020)(a fabulous new implementation)](https://sebh.github.io/publications/egsr2020.pdf)
+
+#### Parallax Occlusion Mapping
+![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/mypom.png "Unity version:2022.3.17f1c1")
+
+#### Black Hole Effect
+![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/myhole.png "Unity version:2022.3.17f1c1")
+By combining POM and Black Hole Effect, we can create some cool skybox:
+![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/myblackhole.png "Unity version:2022.3.17f1c1")
+
+#### Screen Space Reflection
+![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/myssr.png "Unity version:2022.3.17f1c1")
+
+#### Water Rendering
+UV animation using displacement/normal texture and thickness texture baked from Houdini.
+Fast Subsurface scattering + Screen Space Reflection
+![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/mywater.png "Unity version:2022.3.17f1c1")
