@@ -1,6 +1,6 @@
-# WorldEnvSystem
+# Graphics Journey
 
-This is a personal project of mine aimed at implementing various natural environment effects in Unity.
+This is a personal project of mine aimed at implementing various graphics technologies in Unity.
 
 ![showcase](https://github.com/Wunjo777/WorldEnvSystem/blob/master/myclouds.png "Unity version:2022.3.17f1c1")
 
