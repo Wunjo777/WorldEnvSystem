@@ -43,7 +43,7 @@ public class CloudsPass : ScriptableRenderPass
     static readonly int FinalTexId = Shader.PropertyToID("_FinalTex");   // 设置主贴图
     static readonly int CloudId = Shader.PropertyToID("_CloudTex");
     static readonly int BlurId = Shader.PropertyToID("_BlurTex");
-    static readonly int blurLoop = 4;
+    static readonly int blurLoop = 2;
     /********************************************************************************************/
     Clouds clouds;           // 传递到volume
     Material cloudsMaterial;     // 后处理使用材质

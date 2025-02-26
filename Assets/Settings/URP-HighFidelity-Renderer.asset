@@ -63,11 +63,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e533de41698bc184ba8631509fcc5f92, type: 3}
   m_Name: SsrPass
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 300
     shader: {fileID: 4800000, guid: b5cc8ddb4d1fad74e99323c9ddea4a80, type: 3}
-    HizComputeShader: {fileID: 7200000, guid: 010e96fd1c418c74090dd8b4de1afc76, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,7 +89,8 @@ MonoBehaviour:
   - {fileID: -7671440825377050906}
   - {fileID: 7175909561843304605}
   - {fileID: -504395924601647545}
-  m_RendererFeatureMap: adc0de57c6d2eee5f8c1c8f2c09f960ee6aef8df369189959dc8ff15baf3956347cef637940600f9
+  - {fileID: 3080436842289878386}
+  m_RendererFeatureMap: adc0de57c6d2eee5f8c1c8f2c09f960ee6aef8df369189959dc8ff15baf3956347cef637940600f972d5b6b9fce8bf2a
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -145,10 +145,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8b51e08aad401d43ab5ef7ea55b4c03, type: 3}
   m_Name: CloudsPass
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     renderPassEvent: 550
     shader: {fileID: 4800000, guid: 7b0e96d66a94a5341819e13d09a3e135, type: 3}
+--- !u!114 &3080436842289878386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8154023ebdd1a74b8d76090ba35ab42, type: 3}
+  m_Name: DebuggPass
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    renderPassEvent: 550
+    shader: {fileID: 4800000, guid: b2ad555f9770eed45a51ab4ef7bdabd8, type: 3}
 --- !u!114 &7175909561843304605
 MonoBehaviour:
   m_ObjectHideFlags: 0
